@@ -1,8 +1,8 @@
 [gd_scene load_steps=24 format=3 uid="uid://cwr7601mxf2ev"]
 
-[ext_resource type="Script" uid="uid://dc7it7lmu060g" path="res://world_generator.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://dc7it7lmu060g" path="res://scripts/world_generator.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://bb17l2f86jbyx" path="res://assets/1BIT CanariPack TopDown/TILESET/PixelPackTOPDOWN1BIT.png" id="2_0xm2m"]
-[ext_resource type="Script" uid="uid://l7ilfephb1bf" path="res://player_movement.gd" id="3_272bh"]
+[ext_resource type="Script" uid="uid://l7ilfephb1bf" path="res://scripts/player_movement.gd" id="3_272bh"]
 [ext_resource type="FontFile" uid="uid://4vchhmuijwqj" path="res://assets/m5x7.ttf" id="4_5vw27"]
 [ext_resource type="Texture2D" uid="uid://crdlhpmghq03i" path="res://assets/1BIT CanariPack TopDown/SPRITES/HEROS/spritesheets/HEROS1bit_Adventurer Walk D.png" id="4_272bh"]
 [ext_resource type="Texture2D" uid="uid://dipcl2efbd0sc" path="res://assets/1BIT CanariPack TopDown/SPRITES/HEROS/spritesheets/HEROS1bit_Adventurer Walk R.png" id="5_5vw27"]
