@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cv18e2pth56g5"
+path="res://.godot/imported/1BITTopDownMusics - Track 02 (1BIT Dark Cave).wav-4dd61d1ca1f36fff4f1aea45557b1eb8.sample"
+
+[deps]
+
+source_file="res://assets/1BIT CanariPack TopDown/MUSIC/1BITTopDownMusics - Track 02 (1BIT Dark Cave).wav"
+dest_files=["res://.godot/imported/1BITTopDownMusics - Track 02 (1BIT Dark Cave).wav-4dd61d1ca1f36fff4f1aea45557b1eb8.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

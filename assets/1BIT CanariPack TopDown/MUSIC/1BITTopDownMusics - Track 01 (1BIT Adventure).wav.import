@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://met86a5qsuq2"
+path="res://.godot/imported/1BITTopDownMusics - Track 01 (1BIT Adventure).wav-11e005537bff69ae33122ae5ad8dbade.sample"
+
+[deps]
+
+source_file="res://assets/1BIT CanariPack TopDown/MUSIC/1BITTopDownMusics - Track 01 (1BIT Adventure).wav"
+dest_files=["res://.godot/imported/1BITTopDownMusics - Track 01 (1BIT Adventure).wav-11e005537bff69ae33122ae5ad8dbade.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
