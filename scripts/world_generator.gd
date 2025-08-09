@@ -153,17 +153,26 @@ func prepare_world_grid():
 				fill_tile(Vector2(j, i))
 
 func move(xy : Vector2):
+	# is player trying to go oob?
 	if xy.x < 0 or xy.x == HORIZONTAL_BOUND or xy.y < 0 or xy.y == VERTICAL_BOUND:
 		return false
+	
+	# checks position that player wants to go to
 	var position = world_grid[int(xy.y)][int(xy.x)]
+	# if it's a wall,
 	if position['type'] in abbr_walls:
+		# if it's dead
 		if position['health'] == 0:
+			# make it a floor
 			position['type'] = 'f'
-			tile_map.set_cell(xy, 0, Vector2(10, 1))
+			tile_map.set_cell(Vector2(xy.x, xy.y), 0, Vector2(10, 1))
+
 		else:
-			position['health'] -= 1
-			player.shovel()
+			# attack it
+			if player.shovel():
+				position['health'] -= 1
 			
+	# returns if it's steppable
 	return position['type'] not in abbr_walls
 
 func _ready():

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cwr7601mxf2ev"]
+[gd_scene load_steps=24 format=3 uid="uid://cwr7601mxf2ev"]
 
 [ext_resource type="Script" uid="uid://dc7it7lmu060g" path="res://scripts/world_generator.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://bb17l2f86jbyx" path="res://assets/1BIT CanariPack TopDown/TILESET/PixelPackTOPDOWN1BIT.png" id="2_0xm2m"]
@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://crdlhpmghq03i" path="res://assets/1BIT CanariPack TopDown/SPRITES/HEROS/spritesheets/HEROS1bit_Adventurer Walk D.png" id="4_272bh"]
 [ext_resource type="Texture2D" uid="uid://dipcl2efbd0sc" path="res://assets/1BIT CanariPack TopDown/SPRITES/HEROS/spritesheets/HEROS1bit_Adventurer Walk R.png" id="5_5vw27"]
 [ext_resource type="Texture2D" uid="uid://cpb0rosecb00e" path="res://assets/1BIT CanariPack TopDown/SPRITES/HEROS/spritesheets/HEROS1bit_Adventurer Walk U.png" id="6_kek77"]
-[ext_resource type="Script" uid="uid://blu0mtd380ncm" path="res://scripts/class.gd" id="8_5vw27"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h2yge"]
 texture = ExtResource("2_0xm2m")
@@ -536,7 +535,7 @@ tile_set = SubResource("TileSet_1bvp3")
 [node name="player" type="CharacterBody2D" parent="."]
 position = Vector2(160, 160)
 script = ExtResource("3_272bh")
-char_class = "fighter"
+speed = null
 
 [node name="Camera2D" type="Camera2D" parent="player"]
 position = Vector2(8, 8)
@@ -565,6 +564,3 @@ animation = &"walk_down"
 autoplay = "walk_down"
 frame_progress = 0.963426
 centered = false
-
-[node name="Class" type="Node" parent="player"]
-script = ExtResource("8_5vw27")
