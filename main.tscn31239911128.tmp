@@ -549,6 +549,8 @@ animations = [{
 
 [node name="world_map" type="Node2D" parent="."]
 script = ExtResource("1_ig7tw")
+HORIZONTAL_BOUND = null
+VERTICAL_BOUND = null
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 texture_filter = 1

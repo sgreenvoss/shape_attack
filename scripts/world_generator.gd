@@ -1,4 +1,5 @@
 extends Node2D
+class_name WorldGenerator
 
 var HORIZONTAL_BOUND = 40
 var VERTICAL_BOUND = 40
@@ -17,16 +18,21 @@ var abbr_walls = ['e', 't', 's', 'm', 'x', 'd']
 
 var room_data = {
 	"enemy": {'x': 15, 'y': 10, 
+	
+	
 		'health': 2,
 		'walls': {'n': Vector2(14, 0), 's': Vector2(14, 2),
 				'e': Vector2(15, 1), 'w': Vector2(13, 1),
 				'ne': Vector2(15, 0), 'se': Vector2(15, 2),
 				'sw': Vector2(13, 2), 'nw': Vector2(13, 0)},
 		#'floors': [Vector2(1, 2), Vector2(3,2), Vector2(5,2)]
-		'floors': [Vector2(1, 0)]
+		'floors': [Vector2(1, 0)],
+		'obj_spawns': {'blob': {'min': 0, 'max': 10}}
 	},
 	
 	"dirt": {'x': 0, 'y': 0, 
+	
+	
 		'health': 1,
 		'walls': {},
 		#'floors': [Vector2(1, 2), Vector2(3,2), Vector2(5,2)]
@@ -34,6 +40,8 @@ var room_data = {
 	},
 	
 	"treasure":  {'x': 3, 'y': 3, 
+	
+	
 		'health': 4,
 		'walls': {'n': Vector2(9, 10), 's': Vector2(9, 12),
 					'e': Vector2(10, 11), 'w': Vector2(8, 11),
@@ -43,6 +51,8 @@ var room_data = {
 	},
 	
 	"smallenemy": {'x': 3, 'y': 3, 
+	
+	
 		'health': 2,
 		'walls': {'n': Vector2(14, 0), 's': Vector2(14, 2),
 				'e': Vector2(15, 1), 'w': Vector2(13, 1),
@@ -53,6 +63,8 @@ var room_data = {
 	},
 	
 	"misc": {'x': 6, 'y': 3, 
+	
+	
 		'health': 4,
 		'walls': {'n': Vector2(9, 10), 's': Vector2(9, 12),
 				'e': Vector2(10, 11), 'w': Vector2(8, 11),
@@ -62,6 +74,8 @@ var room_data = {
 	},
 	
 	"xfull_room": {'x': HORIZONTAL_BOUND + 2, 'y': VERTICAL_BOUND + 2, 
+	
+	
 		'health': INF,
 		'walls': {'n': Vector2(9, 10), 's': Vector2(9, 12),
 				'e': Vector2(10, 11), 'w': Vector2(8, 11),
@@ -71,69 +85,73 @@ var room_data = {
 	}
 }
 
-func set_up_cell(type):
-	return {'type': type[0], 'health': room_data[type]['health']}
+func set_up_cell(tile: Tile, type: String):
+	match type:
+		"xfull_room":
+			tile.health = INF
+			tile.tile_type = "x"
+		"dirt":
+			tile.health = 1
+			tile.tile_type = "d"
 
 func just_walls():
+	pass
 	# generates the world border for the game.
-	# could easily be adapted to generate a floorless room
-	for y in range(-1, VERTICAL_BOUND + 1):
-		for x in range(-1, HORIZONTAL_BOUND + 1):
-			var wall = is_wall("xfull_room", Vector2(-1, -1), Vector2(x, y))
-			if wall:
-				tile_map.set_cell(Vector2(x, y), 0, room_data["xfull_room"]['walls'][wall])
-			else:
-				pass
+	## could easily be adapted to generate a floorless room
+	#for y in range(-1, VERTICAL_BOUND + 1):
+		#for x in range(-1, HORIZONTAL_BOUND + 1):
+			#var new_room = Room.new("xfull_room", Vector2(x, y))
+			#var wall = is_wall("xfull_room", Vector2(x, y))
+			#if wall:
+				#tile_map.set_cell(Vector2(x, y), 0, room_data["xfull_room"]['walls'][wall])
+			#else:
+				#new_room.queue_free()
+				#pass
 
 
-func choose_tile(room_type, room_positions, xy, current_cell):
-	# room positions is dict that stores upper left corner of all rooms
-	 # xy: the current coords in the grid
-	var wall = is_wall(room_type, room_positions, xy)
-	if wall and (!current_cell or room_type in ["misc", "treasure"]):
-		tile_map.set_cell(xy, 0, room_data[room_type]['walls'][wall])
-		world_grid[xy[1]][xy[0]] = set_up_cell(room_type)
+func choose_tile(current_room : Room, current_position, tile_type):
+	var wall = is_wall(current_room, current_position)
+	# !current_cell_type or current_room.room_type in ["misc", "treasure"]
+	if wall and (tile_type == "r"):
+		tile_map.set_cell(current_position, 0, current_room.walls[wall])
+		world_grid[current_position.y][current_position.x].revise(current_room)
 	else:
 		# randomly choose floor tile from available tiles
-		tile_map.set_cell(xy, 0, room_data[room_type]['floors'][randi() %  room_data[room_type]['floors'].size()])
-		world_grid[xy[1]][xy[0]]['health'] = 0
-		world_grid[xy[1]][xy[0]]['type'] = 'r'
+		tile_map.set_cell(current_position, 0, current_room.floors[randi() %  current_room.floors.size()])
 		
 func fill_tile(coord):
 	# fills a blank space tile with either the world border or blank tile 
 	if coord[0] < 0 or coord[0] == HORIZONTAL_BOUND or coord[1] < 0 or coord[1] == VERTICAL_BOUND:
-		world_grid[coord[1]][coord[0]] = set_up_cell('xfull_room')
+		set_up_cell(world_grid[coord[1]][coord[0]], 'x')
 		tile_map.set_cell(coord, 0, Vector2(5, 11))
 	else:
-		world_grid[coord[1]][coord[0]] = set_up_cell('dirt')
+		set_up_cell(world_grid[coord[1]][coord[0]], 'd')
 		tile_map.set_cell(coord, 0, dirt_tiles[randi() % dirt_tiles.size()])
 	
-func is_wall(room_type, room_position, xy):
+func is_wall(room : Room, xy : Vector2):
+	# determines if the position xy in the room is a wall, and if so, which
 	var walltype = ""
 	# north wall?
-	var room_dims = room_data[room_type]
-	if xy[1] == room_position[1]:
+	if xy.y == room.position.y:
 		walltype += 'n'
 	# south wall?
-	elif xy[1] == room_position[1] + room_dims['y'] - 1:
+	elif xy.y == room.position.y + room.room_dimensions.y - 1:
 		walltype += 's'
 		
 	# west wall?
-	if xy[0] == room_position[0]:
+	if xy.x == room.position.x:
 		walltype += 'w'
 	# east wall?
-	elif xy[0] == room_position[0] + room_dims['x'] - 1:
+	elif xy.x == room.position.x + room.room_dimensions.x - 1:
 		walltype += 'e'
 		
 	return walltype
 	
 func prepare_world_grid():
-	var room_positions = {}
-	
 	for i in range(VERTICAL_BOUND):
 		world_grid.append([])
 		for j in range(HORIZONTAL_BOUND):
-			world_grid[i].append({'type': '', 'health': 0})
+			world_grid[i].append(Tile.new())
 
 	just_walls()
 	
@@ -142,15 +160,22 @@ func prepare_world_grid():
 		for ct in range(room_count):
 			var upperl_y = randi_range(0, VERTICAL_BOUND - room_data[room].y)
 			var upperl_x = randi_range(0, HORIZONTAL_BOUND - room_data[room].x)
-			for y in range(upperl_y, upperl_y + room_data[room].y):
-				for x in range(upperl_x, upperl_x + room_data[room].x):
-					choose_tile(room, Vector2(upperl_x, upperl_y), Vector2(x, y), world_grid[y][x]['type'])
+			
+			var up_left_corner = Vector2i(upperl_x, upperl_y)
+			var current_room = Room.new(room, up_left_corner)
+			
+			for y in range(upperl_y, upperl_y + current_room.room_dimensions.y):
+				for x in range(upperl_x, upperl_x + current_room.room_dimensions.x):
+					choose_tile(current_room, Vector2(x, y), world_grid[y][x].tile_type)
+					
+					
+			current_room.queue_free()
 	
 	# fills the extra tiles
-	for i in range(VERTICAL_BOUND):
-		for j in range(HORIZONTAL_BOUND):
-			if world_grid[i][j]['type'] != 'r' and world_grid[i][j]['type'] not in abbr_walls:
-				fill_tile(Vector2(j, i))
+	#for i in range(VERTICAL_BOUND):
+		#for j in range(HORIZONTAL_BOUND):
+			#if world_grid[i][j].tile_type != 'r' and world_grid[i][j].tile_type not in abbr_walls:
+				#fill_tile(Vector2(j, i))
 
 func move(xy : Vector2):
 	# is player trying to go oob?
@@ -158,22 +183,20 @@ func move(xy : Vector2):
 		return false
 	
 	# checks position that player wants to go to
-	var position = world_grid[int(xy.y)][int(xy.x)]
+	var p_position = world_grid[int(xy.y)][int(xy.x)]
 	# if it's a wall,
-	if position['type'] in abbr_walls:
-		# if it's dead
-		if position['health'] == 0:
-			# make it a floor
-			position['type'] = 'f'
-			tile_map.set_cell(Vector2(xy.x, xy.y), 0, Vector2(10, 1))
-
-		else:
-			# attack it
-			if player.shovel():
-				position['health'] -= 1
+	if p_position.tile_type in abbr_walls:
+		# attack it
+		if player.shovel():
+			if p_position.health == 0:
+				# make it a floor
+				p_position.tile_type = 'f'
+				tile_map.set_cell(Vector2(xy.x, xy.y), 0, Vector2(10, 1))
+			else:
+				p_position.health -= 1
 			
 	# returns if it's steppable
-	return position['type'] not in abbr_walls
+	return p_position.tile_type not in abbr_walls
 
 func _ready():
 	prepare_world_grid()

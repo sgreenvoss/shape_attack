@@ -4,6 +4,8 @@ extends CharacterBody2D
 @onready var world_map = $"../world_map"
 @onready var shovel_count = $Camera2D/shovel_count
 @onready var class_data = $Class
+@onready var audio_stream = $AudioStreamPlayer2D
+
 #TEMP
 @onready var tile_map_layer = $"../TileMapLayer"
 
@@ -53,6 +55,7 @@ func shovel():
 		shovel_count.text = 'tired :('
 		return false
 	else:
+		audio_stream.play()
 		shovels -= 1
 		shovel_count.text = str(shovels)
 		return true
