@@ -1,4 +1,5 @@
 extends Node2D
+class_name WorldMap
 
 var HORIZONTAL_BOUND = 40
 var VERTICAL_BOUND = 40
@@ -72,7 +73,7 @@ var room_data = {
 }
 
 func set_up_cell(type):
-	return {'type': type[0], 'health': room_data[type]['health']}
+	return {'type': type[0], 'health': room_data[type]['health'], 'entities': []}
 
 func just_walls():
 	# generates the world border for the game.
@@ -161,19 +162,21 @@ func move(xy : Vector2):
 	var position = world_grid[int(xy.y)][int(xy.x)]
 	# if it's a wall,
 	if position['type'] in abbr_walls:
-		# if it's dead
-		if position['health'] == 0:
-			# make it a floor
-			position['type'] = 'f'
-			tile_map.set_cell(Vector2(xy.x, xy.y), 0, Vector2(10, 1))
-
-		else:
-			# attack it
-			if player.shovel():
-				position['health'] -= 1
+		if player.shovel():
+			position['health'] -= 1
+			if position['health'] <= 0:
+				# make it a floor
+				position['type'] = 'f'
+				tile_map.set_cell(Vector2(xy.x, xy.y), 0, Vector2(10, 1))
+				
 			
 	# returns if it's steppable
 	return position['type'] not in abbr_walls
+
+func valid_space(xy: Vector2):
+	if xy.x < 0 or xy.x == HORIZONTAL_BOUND or xy.y < 0 or xy.y == VERTICAL_BOUND:
+		return false
+	return world_grid[xy.y][xy.x]['type'] not in abbr_walls
 
 func _ready():
 	prepare_world_grid()

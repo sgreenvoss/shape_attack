@@ -6,6 +6,7 @@ extends CharacterBody2D
 @onready var class_data = $Class
 #TEMP
 @onready var tile_map_layer = $"../TileMapLayer"
+@onready var audio = $audio
 
 
 var shovels = 50
@@ -53,6 +54,7 @@ func shovel():
 		shovel_count.text = 'tired :('
 		return false
 	else:
+		audio.play()
 		shovels -= 1
 		shovel_count.text = str(shovels)
 		return true
@@ -67,6 +69,8 @@ func get_attack_tiles():
 func attack():
 	if timer >= cooldown:
 		for tile in get_attack_tiles():
+			for entity in tile['entities']:
+				entity.damage(dmg)
 			tile_map_layer.set_cell(tile, 0, Vector2(5, 11))
 		timer = 0
 	else:
